@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: sans-serif; width: 320px; padding: 15px; }
+        .risk-high { color: #d9534f; }
+        .risk-medium { color: #f0ad4e; }
+        .risk-low { color: #5cb85c; }
+        .reasons { font-size: 12px; background: #f8f9fa; padding: 10px; border-radius: 4px; }
+        .settings { border-top: 1px solid #ddd; margin-top: 15px; padding-top: 10px; }
+    </style>
+</head>
+<body>
+    <h3>Phishing Analysis</h3>
+    
+    <div id="analysis-result">Loading...</div>
+
+    <div class="settings">
+        <h4>Settings</h4>
+        <label>
+            API Endpoint:
+            <input type="text" id="api-endpoint" style="width: 100%;">
+        </label>
+        <br><br>
+        <label>
+            <input type="checkbox" id="enabled"> Enable Protection
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" id="show-low-risk"> Show Low Risk
+        </label>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

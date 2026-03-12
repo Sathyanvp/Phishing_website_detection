@@ -1,0 +1,47 @@
+# Spring Boot Configuration for Phishing Detection Service
+
+spring:
+  application:
+    name: phishing-detection-service
+  
+  # Server configuration
+  server:
+    port: 8080
+    servlet:
+      context-path: /
+  
+  # Logging configuration
+  logging:
+    level:
+      root: INFO
+      com.phishing.detection: DEBUG
+      ai.onnxruntime: WARN
+    pattern:
+      console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+## Phishing Detection Configuration
+#model:
+#  # Path to ONNX model file
+#  # Expected format: path/to/model.onnx
+#  # Download or train model and place in models/ directory
+#  path: models/phishing_detector.onnx
+#  
+  # Feature configuration
+  features:
+    url:
+      max-length: 200
+    entropy:
+      max-char: 6.0
+      max-token: 5.0
+      max-ngram: 6.0
+    dom:
+      max-forms: 10
+      max-iframes: 10
+
+# Server settings
+server:
+  tomcat:
+    threads:
+      max: 200
+      min-spare: 10
+  connection-timeout: 20000
