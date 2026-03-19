@@ -8,35 +8,30 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class AnalysisRequest {
-    // This matches the "features" key in your JavaScript
-    private Features features;
+    
+	//URL features
+	private Integer url_length;
+    private Integer token_count;
+    private Integer hyphenated_domain;
+    private Integer uses_ip_address;
+    private Integer uses_shortener;
+    private Double char_entropy;
+    private Double token_entropy;
+    private Double ngram_entropy;
+    //DOM features
+    private Integer form_count;
+    private Integer password_field_present;
+    private Integer email_field_present;
+    private Integer external_form_action;
+    private Integer iframe_count;
+    //Behavioral features
+    private Integer redirect_indicator;
+    private Integer possible_js_obfuscation;
+    private Integer status_bar_customized;
+    private Integer right_click_disabled;
     
     private String url;
-    private Long timestamp;
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Features {
-        private Integer url_length;
-        private Integer token_count;
-        private Integer hyphenated_domain;
-        private Integer uses_ip_address;
-        private Integer uses_shortener;
-        private Double char_entropy;
-        private Double token_entropy;
-        private Double ngram_entropy;
-        private Integer form_count;
-        private Integer password_field_present;
-        private Integer email_field_present;
-        private Integer external_form_action;
-        private Integer iframe_count;
-        private Integer redirect_indicator;
-        private Integer possible_js_obfuscation;
-        private Integer status_bar_customized;
-        private Integer right_click_disabled;
-        
-        
+ 
         
         public void setUrl_length(Integer url_length) {
     		this.url_length = url_length;
@@ -199,22 +194,17 @@ public class AnalysisRequest {
     	            right_click_disabled != null ? right_click_disabled : 0
     	        };
     	}
-    }
+    
     public void setUrl(String url) {
 		this.url = url;
 	}
 
-	public void setTimestamp(Long timestamp) {
-		this.timestamp = timestamp;
-	}
+	
     
     public String getUrl() {
 		return url;
 	}
 
-	public Long getTimestamp() {
-		return timestamp;
-	}
 
 	
 }

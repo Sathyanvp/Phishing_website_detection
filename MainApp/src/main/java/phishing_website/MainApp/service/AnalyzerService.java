@@ -5,12 +5,15 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
 import phishing_website.MainApp.entity.AnalysisRequest;
-import phishing_website.MainApp.entity.Response;
+import phishing_website.MainApp.entity.AnalysisResponse;
+
 import phishing_website.MainApp.util.FeatureNormalizer;
 
 
 @Service
+@Slf4j
 public class AnalyzerService {
 	
 	    private AIModelService model;
@@ -19,22 +22,34 @@ public class AnalyzerService {
 	   
 	    private ExplanationService explanationService;
 
-	public Response analyzeUrl(AnalysisRequest request) {
+	public AnalysisResponse analyzeUrl(AnalysisRequest request) {
+		log.info("analyzeurl method got request");
 		try {
 			AnalysisRequest normalizedrequest = normalizer.normalize(request);
+			log.info("request normalized");
+			
 			float probability = model.predict(normalizedrequest);
+			log.info("prediction done: " +probability );
+			
 			float risk_score = convertProbabilityToRiskScore(probability);
+			log.info("converted to risk score");
+			
 			String risk_level = determineRiskLevel(risk_score);
+			log.info("risk_level is determined" + risk_level);
+			
 			List<String> explaination = explanationService.generateExplanations(normalizedrequest, risk_score);
-			Response response = new Response(risk_score,
+			log.info("explaination generated");
+			
+			AnalysisResponse response = new AnalysisResponse(risk_score,
                     risk_level,
                     explaination);
 			response.setUrl(request.getUrl());
             response.setTimestamp(System.currentTimeMillis());
+            log.info("response created");
 			return  response;
 		}
 		 catch (Exception e) {
-//	            log.error("Analysis failed for URL: {}", request.getUrl(), e);
+	            log.error("Analysis failed for URL: {}", request.getUrl(), e);
 	            throw new RuntimeException("Analysis failed: " + e.getMessage(), e);
 	        }
 	}

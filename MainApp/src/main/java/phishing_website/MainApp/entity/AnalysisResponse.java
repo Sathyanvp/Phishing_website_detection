@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Response {
+public class AnalysisResponse {
 	
 	private float risk_score;
 	private String risk_level;
@@ -23,7 +23,7 @@ public class Response {
 	private long timestamp;
 	private String Url;
 
-	 public Response(float risk_score, String risk_level, List<String> reasons) {
+	 public AnalysisResponse(float risk_score, String risk_level, List<String> reasons) {
 	        this.risk_score = risk_score;
 	        this.risk_level = risk_level;
 	        this.reasons = reasons;

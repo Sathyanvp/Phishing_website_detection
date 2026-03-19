@@ -65,7 +65,6 @@ public class FeatureNormalizer {
         
         // Copy metadata
         normalized.setUrl(request.getUrl());
-        normalized.setTimestamp(request.getTimestamp());
         
         // Normalize URL features (these are already binary or counts, minimal scaling needed)
         normalized.setUrl_length(normalizeUrlLength(request.getUrl_length()));

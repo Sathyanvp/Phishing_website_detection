@@ -398,31 +398,49 @@ class FeatureExtractor {
     /**
      * Send features to backend for analysis
      */
-    async sendAnalysis() {
-        try {
-            const response = await fetch('http://localhost:8080/api/analyze', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    features: this.features,
-                    url: window.location.href,
-                    timestamp: Date.now()
-                })
-            });
-            
-            if (response.ok) {
-                const result = await response.json();
-                this.handleAnalysisResult(result);
-            } else {
-                console.error('[Phishing Detector] Analysis failed:', response.status);
-            }
-        } catch (error) {
-            console.error('[Phishing Detector] Network error:', error);
-        }
-    }
+	async sendAnalysis() {
+	    try {
+	        // Define url locally so it can be used in the body
+	        const url = window.location.href; 
 
+	        const response = await fetch('http://localhost:8080/api/analyze', {
+	            method: 'POST',
+	            headers: {
+	                'Content-Type': 'application/json',
+	            },
+	            // Change 'json.stringify' to 'JSON.stringify'
+	            body: JSON.stringify({
+	                url_length: url.length,
+	                token_count: url.split('/').length,
+	                hyphenated_domain: this.hasHyphenatedDomain(url),
+	                uses_ip_address: this.usesIPAddress(url),
+	                uses_shortener: this.usesShortener(url),
+	                char_entropy: this.calculateCharEntropy(url),
+	                token_entropy: this.calculateTokenEntropy(url),
+	                ngram_entropy: this.calculateNgramEntropy(url, 3),
+	                form_count: document.forms.length,
+	                password_field_present: this.hasPasswordField(),
+	                email_field_present: this.hasEmailField(),
+	                external_form_action: this.hasExternalFormAction(),
+	                iframe_count: document.querySelectorAll('iframe').length,
+	                redirect_indicator: this.hasRedirectIndicator(),
+	                possible_js_obfuscation: this.detectObfuscation(),
+	                status_bar_customized: this.detectStatusBarCustomization(),
+	                right_click_disabled: this.detectRightClickDisabled(),
+	                url: url
+	            })
+	        });
+	        
+	        if (response.ok) {
+	            const result = await response.json();
+	            this.handleAnalysisResult(result);
+	        } else {
+	            console.error('[Phishing Detector] Analysis failed:', response.status);
+	        }
+	    } catch (error) {
+	        console.error('[Phishing Detector] Network error:', error);
+	    }
+	}
     /**
      * Handle analysis result from backend
      */
