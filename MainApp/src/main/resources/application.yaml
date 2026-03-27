@@ -15,7 +15,7 @@ spring:
   # located in your project's root directory.
   logging:
     file:
-      name: app.log
+      name: logs/app.log
     level:
       root: INFO
       phishing_website: DEBUG

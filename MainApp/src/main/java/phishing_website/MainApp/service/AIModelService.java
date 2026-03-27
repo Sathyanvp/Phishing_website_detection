@@ -10,7 +10,7 @@ public class AIModelService {
 
 	public float predict(AnalysisRequest normalizedrequest) {
 		
-		return 8.0f;
+		return 0.8f;
 	}
 
 }

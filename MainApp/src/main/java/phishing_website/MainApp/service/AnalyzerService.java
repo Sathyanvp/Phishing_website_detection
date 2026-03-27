@@ -16,19 +16,28 @@ import phishing_website.MainApp.util.FeatureNormalizer;
 @Slf4j
 public class AnalyzerService {
 	
-	    private AIModelService model;
+	
 	    private FeatureNormalizer normalizer;
-	    
-	   
+	    private ONNXModelService model;
 	    private ExplanationService explanationService;
+	    
+
+	    public AnalyzerService(ONNXModelService model, FeatureNormalizer normalizer, ExplanationService explanationService) {
+
+		this.model = model;
+		this.normalizer = normalizer;
+		this.explanationService = explanationService;
+	}
+
 
 	public AnalysisResponse analyzeUrl(AnalysisRequest request) {
 		log.info("analyzeurl method got request");
 		try {
-			AnalysisRequest normalizedrequest = normalizer.normalize(request);
-			log.info("request normalized");
 			
-			float probability = model.predict(normalizedrequest);
+//			AnalysisRequest normalizedrequest = normalizer.normalize(request);
+//			log.info("request normalized");
+
+			Double probability = model.predict(request);
 			log.info("prediction done: " +probability );
 			
 			float risk_score = convertProbabilityToRiskScore(probability);
@@ -37,7 +46,7 @@ public class AnalyzerService {
 			String risk_level = determineRiskLevel(risk_score);
 			log.info("risk_level is determined" + risk_level);
 			
-			List<String> explaination = explanationService.generateExplanations(normalizedrequest, risk_score);
+			List<String> explaination = explanationService.generateExplanations(request, risk_score);
 			log.info("explaination generated");
 			
 			AnalysisResponse response = new AnalysisResponse(risk_score,
@@ -65,9 +74,9 @@ public class AnalyzerService {
 		
 	}
 
-	private float convertProbabilityToRiskScore(float probability) {
+	private float convertProbabilityToRiskScore(Double probability) {
 		
-		return probability * 10.0f;
+		return (float) (probability * 10.0);
 	}
 
 }

@@ -15,7 +15,33 @@ chrome.runtime.onInstalled.addListener(function() {
         showLowRisk: false
     });
 });
-
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === "analyze") {
+        fetch('http://localhost:8080/api/analyze', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(request.data)
+        })
+		// Inside background.js
+		.then(async response => {
+		    const contentType = response.headers.get("content-type");
+		    if (response.ok && contentType && contentType.includes("application/json")) {
+		        return response.json();
+		    } else {
+		        // Log the actual text to see the error message from Spring
+		        const errorText = await response.text();
+		        throw new Error(`Server Error: ${response.status} - ${errorText}`);
+		    }
+		})
+      
+        .then(result => sendResponse(result))
+        .catch(error => {
+            console.error('Fetch Error:', error);
+            sendResponse({ error: error.message });
+        });
+        return true; // Keeps the channel open for the async response
+    }
+});
 // Listen for messages from content scripts
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.action === 'getSettings') {

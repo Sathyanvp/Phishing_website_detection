@@ -60,7 +60,7 @@ class FeatureExtractor {
         
         return {
             url_length: url.length,
-            token_count: url.split('/').length,
+            token_count: url.split(/[./\-?_=&]/).filter(t => t.length > 0).length,
             hyphenated_domain: this.hasHyphenatedDomain(url),
             uses_ip_address: this.usesIPAddress(url),
             uses_shortener: this.usesShortener(url)
@@ -400,45 +400,40 @@ class FeatureExtractor {
      */
 	async sendAnalysis() {
 	    try {
-	        // Define url locally so it can be used in the body
 	        const url = window.location.href; 
+            const urlNoScheme = url.replace(/^https?:\/\//, '');
+	        const features = {
+	            url_length: urlNoScheme.length,
+	            token_count: urlNoScheme.split(/[./\-?_=&]/).length,
+	            hyphenated_domain: this.hasHyphenatedDomain(url),
+	            uses_ip_address: this.usesIPAddress(url),
+	            uses_shortener: this.usesShortener(url),
+	            char_entropy: this.calculateCharEntropy(urlNoScheme),
+	            token_entropy: this.calculateTokenEntropy(urlNoScheme),
+	            ngram_entropy: this.calculateNgramEntropy(urlNoScheme, 3),
+	            form_count: document.forms.length,
+	            password_field_present: this.hasPasswordField(),
+	            email_field_present: this.hasEmailField(),
+	            external_form_action: this.hasExternalFormAction(),
+	            iframe_count: document.querySelectorAll('iframe').length,
+	            redirect_indicator: this.hasRedirectIndicator(),
+	            possible_js_obfuscation: this.detectObfuscation(),
+	            status_bar_customized: this.detectStatusBarCustomization(),
+	            right_click_disabled: this.detectRightClickDisabled(),
+	            url: url
+	        };
 
-	        const response = await fetch('http://localhost:8080/api/analyze', {
-	            method: 'POST',
-	            headers: {
-	                'Content-Type': 'application/json',
-	            },
-	            // Change 'json.stringify' to 'JSON.stringify'
-	            body: JSON.stringify({
-	                url_length: url.length,
-	                token_count: url.split('/').length,
-	                hyphenated_domain: this.hasHyphenatedDomain(url),
-	                uses_ip_address: this.usesIPAddress(url),
-	                uses_shortener: this.usesShortener(url),
-	                char_entropy: this.calculateCharEntropy(url),
-	                token_entropy: this.calculateTokenEntropy(url),
-	                ngram_entropy: this.calculateNgramEntropy(url, 3),
-	                form_count: document.forms.length,
-	                password_field_present: this.hasPasswordField(),
-	                email_field_present: this.hasEmailField(),
-	                external_form_action: this.hasExternalFormAction(),
-	                iframe_count: document.querySelectorAll('iframe').length,
-	                redirect_indicator: this.hasRedirectIndicator(),
-	                possible_js_obfuscation: this.detectObfuscation(),
-	                status_bar_customized: this.detectStatusBarCustomization(),
-	                right_click_disabled: this.detectRightClickDisabled(),
-	                url: url
-	            })
+	        // Send message to background.js
+	        chrome.runtime.sendMessage({ action: "analyze", data: features }, (response) => {
+	            if (response && !response.error) {
+	                this.handleAnalysisResult(response);
+	            } else {
+	                console.error('[Phishing Detector] Background analysis failed:', response?.error);
+	            }
 	        });
-	        
-	        if (response.ok) {
-	            const result = await response.json();
-	            this.handleAnalysisResult(result);
-	        } else {
-	            console.error('[Phishing Detector] Analysis failed:', response.status);
-	        }
+
 	    } catch (error) {
-	        console.error('[Phishing Detector] Network error:', error);
+	        console.error('[Phishing Detector] Communication error:', error);
 	    }
 	}
     /**
@@ -485,7 +480,7 @@ class FeatureExtractor {
         // Create popup
         const popup = document.createElement('div');
         popup.style.cssText = `
-            background: white;
+            background: White;
             border-radius: 8px;
             padding: 20px;
             max-width: 400px;
@@ -493,7 +488,7 @@ class FeatureExtractor {
             font-family: Arial, sans-serif;
         `;
         
-        const riskColor = result.risk_level === 'HIGH' ? '#dc3545' : '#ffc107';
+        const riskColor = result.risk_level === 'HIGH' ? '#eb1414' : '#ffc107';
         
         popup.innerHTML = `
             <div style="text-align: center; margin-bottom: 15px;">
@@ -505,7 +500,7 @@ class FeatureExtractor {
                 </div>
             </div>
             
-            <div style="margin-bottom: 15px;">
+            <div style="margin-bottom: 15px;color: #000000;">
                 <strong>Reasons for suspicion:</strong>
                 <ul style="margin-top: 5px;">
                     ${result.reasons.map(reason => `<li>${reason}</li>`).join('')}
@@ -514,7 +509,7 @@ class FeatureExtractor {
             
             <div style="text-align: center;">
                 <button id="phishing-close-btn" style="
-                    background: #007bff;
+                    background: #0000ff;
                     color: white;
                     border: none;
                     padding: 10px 20px;
@@ -542,7 +537,11 @@ class FeatureExtractor {
         });
         
         document.getElementById('phishing-leave-btn').addEventListener('click', () => {
-            window.location.href = 'about:blank';
+            if (document.referrer) {
+        window.history.back(); // Goes to the previous safe page
+    } else {
+        window.location.href = "https://www.google.com"; // Fallback
+    }
         });
     }
 }
