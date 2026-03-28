@@ -75,21 +75,20 @@ public class FeatureNormalizer {
         
         // Normalize entropy features (continuous, need scaling)
         normalized.setChar_entropy(normalizeCharEntropy(request.getChar_entropy()));
-        normalized.setToken_entropy(normalizeTokenEntropy(request.getToken_entropy()));
+
         normalized.setNgram_entropy(normalizeNgramEntropy(request.getNgram_entropy()));
         
         // Normalize DOM features
         normalized.setForm_count(normalizeFormCount(request.getForm_count()));
         normalized.setPassword_field_present(request.getPassword_field_present());
-        normalized.setEmail_field_present(request.getEmail_field_present());
+    
         normalized.setExternal_form_action(request.getExternal_form_action());
         normalized.setIframe_count(normalizeIframeCount(request.getIframe_count()));
         normalized.setRedirect_indicator(request.getRedirect_indicator());
         
         // Normalize behavioral features (binary)
         normalized.setPossible_js_obfuscation(request.getPossible_js_obfuscation());
-        normalized.setStatus_bar_customized(request.getStatus_bar_customized());
-        normalized.setRight_click_disabled(request.getRight_click_disabled());
+  
         
 //        log.debug("Features normalized successfully for URL: {}", request.getUrl());
         return normalized;
@@ -123,10 +122,7 @@ public class FeatureNormalizer {
     /**
      * Normalize token entropy
      */
-    private Double normalizeTokenEntropy(Double value) {
-        if (value == null || value < 0) return 0.0;
-        return Math.min(value, TOKEN_ENTROPY_MAX);
-    }
+   
     
     /**
      * Normalize n-gram entropy

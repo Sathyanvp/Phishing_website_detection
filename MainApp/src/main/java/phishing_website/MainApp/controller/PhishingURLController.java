@@ -1,5 +1,7 @@
 package phishing_website.MainApp.controller;
 
+import java.util.Arrays;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -41,6 +43,7 @@ public class PhishingURLController {
 	@PostMapping("/analyze")
 	public ResponseEntity<AnalysisResponse> analyzeUrl(@RequestBody AnalysisRequest request) {
 		log.info("request reached");
+        System.out.println(Arrays.toString(request.featuretoVector()));
 		try {
 			if(request.getUrl() == null || request.getUrl().isEmpty()) {
 				log.info("Bad request: Request is empty");

@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class AnalysisRequest {
-    
+	
+	private String url;
 	//URL features
 	private Integer url_length;
     private Integer token_count;
@@ -16,21 +17,19 @@ public class AnalysisRequest {
     private Integer uses_ip_address;
     private Integer uses_shortener;
     private Double char_entropy;
-    private Double token_entropy;
     private Double ngram_entropy;
     //DOM features
     private Integer form_count;
     private Integer password_field_present;
-    private Integer email_field_present;
+
     private Integer external_form_action;
     private Integer iframe_count;
     //Behavioral features
     private Integer redirect_indicator;
     private Integer possible_js_obfuscation;
-    private Integer status_bar_customized;
-    private Integer right_click_disabled;
+
     
-    private String url;
+    
  
         
         public void setUrl_length(Integer url_length) {
@@ -57,10 +56,6 @@ public class AnalysisRequest {
     		this.char_entropy = char_entropy;
     	}
 
-    	public void setToken_entropy(Double token_entropy) {
-    		this.token_entropy = token_entropy;
-    	}
-
     	public void setNgram_entropy(Double ngram_entropy) {
     		this.ngram_entropy = ngram_entropy;
     	}
@@ -73,10 +68,7 @@ public class AnalysisRequest {
     		this.password_field_present = password_field_present;
     	}
 
-    	public void setEmail_field_present(Integer email_field_present) {
-    		this.email_field_present = email_field_present;
-    	}
-
+    
     	public void setExternal_form_action(Integer external_form_action) {
     		this.external_form_action = external_form_action;
     	}
@@ -93,14 +85,7 @@ public class AnalysisRequest {
     		this.possible_js_obfuscation = possible_js_obfuscation;
     	}
 
-    	public void setStatus_bar_customized(Integer status_bar_customized) {
-    		this.status_bar_customized = status_bar_customized;
-    	}
-
-    	public void setRight_click_disabled(Integer right_click_disabled) {
-    		this.right_click_disabled = right_click_disabled;
-    	}
-
+    	
 
     	
         public Integer getUrl_length() {
@@ -127,9 +112,7 @@ public class AnalysisRequest {
     		return char_entropy;
     	}
 
-    	public Double getToken_entropy() {
-    		return token_entropy;
-    	}
+    	
 
     	public Double getNgram_entropy() {
     		return ngram_entropy;
@@ -143,9 +126,7 @@ public class AnalysisRequest {
     		return password_field_present;
     	}
 
-    	public Integer getEmail_field_present() {
-    		return email_field_present;
-    	}
+    	
 
     	public Integer getExternal_form_action() {
     		return external_form_action;
@@ -163,14 +144,7 @@ public class AnalysisRequest {
     		return possible_js_obfuscation;
     	}
 
-    	public Integer getStatus_bar_customized() {
-    		return status_bar_customized;
-    	}
-
-    	public Integer getRight_click_disabled() {
-    		return right_click_disabled;
-    	}
-
+    
     	
 
     	public float[] featuretoVector() {
@@ -181,17 +155,16 @@ public class AnalysisRequest {
     	            uses_ip_address != null ? uses_ip_address : 0,
     	            uses_shortener != null ? uses_shortener : 0,
     	            char_entropy != null ? char_entropy.floatValue() : 0,
-    	            token_entropy != null ? token_entropy.floatValue() : 0,
+    	            
     	            ngram_entropy != null ? ngram_entropy.floatValue() : 0,
     	            form_count != null ? form_count : 0,
     	            password_field_present != null ? password_field_present : 0,
-    	            email_field_present != null ? email_field_present : 0,
+    	          
     	            external_form_action != null ? external_form_action : 0,
     	            iframe_count != null ? iframe_count : 0,
     	            redirect_indicator != null ? redirect_indicator : 0,
     	            possible_js_obfuscation != null ? possible_js_obfuscation : 0,
-    	            status_bar_customized != null ? status_bar_customized : 0,
-    	            right_click_disabled != null ? right_click_disabled : 0
+    	         
     	        };
     	}
     

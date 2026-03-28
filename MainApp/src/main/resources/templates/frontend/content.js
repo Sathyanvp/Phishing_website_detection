@@ -95,8 +95,17 @@ class FeatureExtractor {
     /**
      * Check if URL uses known URL shorteners
      */
-    usesShortener(url) {
-        const shorteners = ['bit.ly', 'tinyurl.com', 'goo.gl', 't.co', 'ow.ly'];
+    usesShortener(url) {	
+        const shorteners = [		'bit\\.ly', 'goo\\.gl', 'shorte\\.st', 'go2l\\.ink', 'x\\.co', 'ow\\.ly', 't\\.co',
+			        'tinyurl', 'tr\\.im', 'is\\.gd', 'cli\\.gs', 'yfrog\\.com', 'migre\\.me', 'ff\\.im', 'tiny\\.cc', 
+			        'url4\\.eu', 'twit\\.ac', 'su\\.pr', 'twurl\\.nl', 'snipurl\\.com', 'short\\.to', 'BudURL\\.com', 
+			        'ping\\.fm', 'post\\.ly', 'Just\\.as', 'bkite\\.com', 'snipr\\.com', 'fic\\.kr', 'loopt\\.us', 
+			        'doiop\\.com', 'short\\.ie', 'kl\\.am', 'wp\\.me', 'rubyurl\\.com', 'om\\.ly', 'to\\.ly', 
+			        'bit\\.do', 't\\.co', 'lnkd\\.in', 'db\\.tt', 'qr\\.ae', 'adf\\.ly', 'goo\\.gl', 'bitly\\.com', 
+			        'cur\\.lv', 'tinyurl\\.com', 'ow\\.ly', 'bit\\.ly', 'ity\\.im', 'q\\.gs', 'is\\.gd', 'po\\.st', 
+			        'bc\\.vc', 'twitthis\\.com', 'u\\.to', 'j\\.mp', 'buzurl\\.com', 'cutt\\.us', 'u\\.bb', 
+			        'yourls\\.org', 'x\\.co', 'prettylinkpro\\.com', 'scrnch\\.me', 'filoops\\.info', 'vzturl\\.com', 
+			        'qr\\.net', '1url\\.com', 'tweez\\.me', 'v\\.gd', 'tr\\.im', 'link\\.zip\\.net'];
         try {
             const domain = new URL(url).hostname.toLowerCase();
             return shorteners.some(shortener => domain.includes(shortener)) ? 1 : 0;
@@ -403,24 +412,20 @@ class FeatureExtractor {
 	        const url = window.location.href; 
             const urlNoScheme = url.replace(/^https?:\/\//, '');
 	        const features = {
-	            url_length: urlNoScheme.length,
+				url: url,
+	            url_length: url.length,
 	            token_count: urlNoScheme.split(/[./\-?_=&]/).length,
 	            hyphenated_domain: this.hasHyphenatedDomain(url),
 	            uses_ip_address: this.usesIPAddress(url),
 	            uses_shortener: this.usesShortener(url),
 	            char_entropy: this.calculateCharEntropy(urlNoScheme),
-	            token_entropy: this.calculateTokenEntropy(urlNoScheme),
 	            ngram_entropy: this.calculateNgramEntropy(urlNoScheme, 3),
 	            form_count: document.forms.length,
 	            password_field_present: this.hasPasswordField(),
-	            email_field_present: this.hasEmailField(),
 	            external_form_action: this.hasExternalFormAction(),
 	            iframe_count: document.querySelectorAll('iframe').length,
 	            redirect_indicator: this.hasRedirectIndicator(),
-	            possible_js_obfuscation: this.detectObfuscation(),
-	            status_bar_customized: this.detectStatusBarCustomization(),
-	            right_click_disabled: this.detectRightClickDisabled(),
-	            url: url
+	            possible_js_obfuscation: this.detectObfuscation()
 	        };
 
 	        // Send message to background.js

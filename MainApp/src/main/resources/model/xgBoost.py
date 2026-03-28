@@ -46,10 +46,9 @@ class PhishingModelTrainer:
         self.y_train = None
         self.y_test = None
         self.FEATURE_ORDER = [
-    "url_length", "token_count", "hyphenated_domain", "uses_ip_address", "uses_shortener",
-    "char_entropy","token_entropy","ngram_entropy", "form_count", "password_field_present",
-    "email_field_present", "external_form_action", "iframe_count", "redirect_indicator",
-    "possible_js_obfuscation", "status_bar_customized", "right_click_disabled"
+    "url_length", "token_count", "hyphenated_domain", "uses_ip_address", "is_shortened",
+    "char_entropy","ngram_entropy", "form_count", "password_field_present", "external_form_action", "iframe_count", "redirect_indicator",
+    "possible_js_obfuscation"
 ]
         
     def load_data(self, data_path):
@@ -64,7 +63,7 @@ class PhishingModelTrainer:
     # We use FEATURE_ORDER to ensure the index mapping remains consistent for Java
         X = df[self.FEATURE_ORDER].apply(pd.to_numeric, errors='coerce').fillna(0)
         y = df['label'].astype(int)
-        print(X)
+        print(X[:5])
         return X , y
     
     def split_data(self, X, y):
@@ -144,23 +143,23 @@ class PhishingModelTrainer:
 
     def train(self, data_path, output_path):
       
-        X, y = self.load_data(data_path)
-        self.split_data(X, y)
+        # X, y = self.load_data(data_path)
+        # self.split_data(X, y)
         
         # self.train_model()
     
         # self.save_model(output_path)
         sample_data = [
-17,2,0,0,0,2.725480556997868,2.5,2.5935346841684104,1,0,0,1,1,0,0,0,0]
-# [18.0, 5.0, 0.0, 0.0, 0.0, 2.9219282, 2.5, 3.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0]
-#         print(self.predict(sample_data))
+33,6,0,0,0,3.6430741894285696,3.6120568402659834,1,0,0,0,2,0]
+        print(self.predict(sample_data))
 
 
 def main():
     np.set_printoptions(suppress=True, precision=5)
-    onnx_path = r"C:\Users\ELCOT\git\Phishing_website_detector\MainApp\src\main\resources\model"
+    onnx_path = r"MainApp\src\main\resources\model"
+    dataset_path = r"MainApp\src\main\resources\model\final_dataset.csv"
     trainer = PhishingModelTrainer()
-    trainer.train(r"C:\Users\ELCOT\git\Phishing_website_detector\MainApp\src\main\resources\final_dataset.csv",onnx_path)
+    trainer.train(dataset_path, onnx_path)
    
 
 if __name__ == '__main__':

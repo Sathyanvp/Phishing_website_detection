@@ -74,10 +74,7 @@ public class ExplanationService {
             reasons.add("URL tokens show high randomness (potential obfuscation)");
         }
         
-        // High token entropy
-        if (request.getToken_entropy() != null && request.getToken_entropy() > 3.5) {
-            reasons.add("URL path segments appear randomly generated");
-        }
+      
         
         // High n-gram entropy
         if (request.getNgram_entropy() != null && request.getNgram_entropy() > 5.0) {
@@ -94,10 +91,7 @@ public class ExplanationService {
             reasons.add("Credential form detected (password field present)");
         }
         
-        // Email field detected
-        if (request.getEmail_field_present() != null && request.getEmail_field_present() == 1) {
-            reasons.add("Email input field detected");
-        }
+       
         
         // External form submission
         if (request.getExternal_form_action() != null && request.getExternal_form_action() == 1) {
@@ -129,15 +123,7 @@ public class ExplanationService {
             reasons.add("JavaScript code appears to be obfuscated");
         }
         
-        // Status bar customization
-        if (request.getStatus_bar_customized() != null && request.getStatus_bar_customized() == 1) {
-            reasons.add("Website attempts to customize status bar (malicious technique)");
-        }
         
-        // Right-click disabled
-        if (request.getRight_click_disabled() != null && request.getRight_click_disabled() == 1) {
-            reasons.add("Right-click context menu is disabled (prevents inspection)");
-        }
     }
 
 }
